@@ -13,15 +13,25 @@ public class TaskActivity extends AppCompatActivity {
     // для вывода значений переменных a и b
     TextView out;
 
+    // для вывода результата (правильно/неправильно)
     TextView outRes;
+
+    // для вывода очков
     TextView score;
 
+    // для ввода результата
     EditText et_in;
 
+    // для записи введеного результата
     String in = "";
 
+    // две переменные, в которые программа рандомно записывает числа от -50 до 100
     int a, b;
+
+    // для записи резултата операций a и b
     float c;
+
+    // счетчик очков
     int scoreValue = 0;
 
     @Override
@@ -30,24 +40,29 @@ public class TaskActivity extends AppCompatActivity {
         setContentView(R.layout.activity_task);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        // инициализация View элементов
         out = (TextView) findViewById(R.id.output);
         outRes = (TextView) findViewById(R.id.outputRes);
         score = (TextView) findViewById(R.id.score);
         et_in = findViewById(R.id.et_input);
         score.setText("Score: " + scoreValue);
 
+        // вызов функции для генерации значений переменных a и b, а также оператора (-, +, *, /)
         Generation();
     }
 
     public void Generation()
     {
+        // инициализация a и b рандомным значением от -50 до 100
         a = -50 + (int)(Math.random() * 100);
         b = -50 + (int)(Math.random() * 100);
 
+        // рандомно выбираем знак операции (-, +, *, /)
         int operation = (int)(Math.random() * 4);
 
         switch (operation)
         {
+            // если 0, то оператор пусть будет +
             case 0:
                 if(b < 0)
                     out.setText(a + "+(" + b + ")");
@@ -56,6 +71,7 @@ public class TaskActivity extends AppCompatActivity {
                 c = a + b;
                 break;
 
+            // если 1, то оператор пусть будет -
             case 1:
                 if(b < 0)
                     out.setText(a + "-(" + b + ")");
@@ -64,6 +80,7 @@ public class TaskActivity extends AppCompatActivity {
                 c = a - b;
                 break;
 
+            // если 2, то оператор пусть будет *
             case 2:
                 if(b < 0)
                     out.setText(a + "x(" + b + ")");
@@ -72,17 +89,20 @@ public class TaskActivity extends AppCompatActivity {
                 c = a * b;
                 break;
 
+            // если 3, то оператор пусть будет /
             case 3:
                 if(b < 0)
                     out.setText(a + "/(" + b + ")");
                 else
                     out.setText(a + "/" + b);
                 c = (float) a / b;
-                outRes.setText(""+c);
+                String str_f = String.format("%.3f", c);
+                c = Float.parseFloat(str_f);
                 break;
         }
     }
 
+    // функция для проверки введенного и действительного результата
     public void CheckAnswer()
     {
         if(Float.parseFloat(in) == c)
@@ -104,9 +124,13 @@ public class TaskActivity extends AppCompatActivity {
         ((EditText) findViewById(R.id.et_input)).setText("");
     }
 
+    // кнопка "Проверить"
     public void Check(View view)
     {
-        in = et_in.getText().toString();
+        String tempIn = et_in.getText().toString();
+        in = String.format(tempIn, "%.3f");
+        String d = in;
+
         if(in.isEmpty())
         {
             outRes.setTextColor(getResources().getColor(R.color.red));
@@ -116,6 +140,7 @@ public class TaskActivity extends AppCompatActivity {
         {
             CheckAnswer();
             Generation();
+            outRes.setText(d);
         }
     }
 }
